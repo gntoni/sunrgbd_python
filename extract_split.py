@@ -1,7 +1,7 @@
 import os
 from utils.load_mat import loadmat
 
-split = loadmat("SUNRGBDtoolbox/traintestSUNRGBD/allsplit.mat") 
+split = loadmat("../SUNRGBDtoolbox/traintestSUNRGBD/allsplit.mat") 
 
 N_train = len(split["alltrain"])
 N_val = len(split["alltest"])
@@ -17,7 +17,7 @@ for i in range(N_val):
     hash_val.append(folder_path)
 
 # Map data to train or val set
-SUNRGBDMeta = loadmat("SUNRGBDMeta3DBB_v2.mat")["SUNRGBDMeta"]
+SUNRGBDMeta = loadmat("../SUNRGBDMeta3DBB_v2.mat")["SUNRGBDMeta"]
 
 trainval_folder = "sunrgbd_trainval"
 os.makedirs(trainval_folder, exist_ok=True)
@@ -28,8 +28,9 @@ with open(f_train, "w") as ft, open(f_val, "w") as fv:
     for imageId in range(len(SUNRGBDMeta)):
         data = SUNRGBDMeta[imageId]
         depthpath = data.depthpath[17:]
-        if os.path.abspath(depthpath) in hash_train:
-            ft.write(str(imageId) + "`\n")
-        elif os.path.basename(depthpath):
+        # remove filename and containing folder from path 
+        filepath = os.path.dirname(os.path.dirname(depthpath))
+        if filepath in hash_train:
+            ft.write(str(imageId) + "\n")
+        elif filepath in hash_val:
             fv.write(str(imageId) + "\n")
-        
