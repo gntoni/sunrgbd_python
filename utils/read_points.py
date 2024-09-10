@@ -38,7 +38,7 @@ def read_3d_pts_general(depthInpaint, K, depthInpaintsize, imageName=None, crop=
 
 def read3dPoints(data):
     # Read depth image
-    depthVis = np.array(Image.open(data['depthpath']))
+    depthVis = np.array(Image.open(data.depthpath))
     imsize = depthVis.shape
 
     # Process the depth image
@@ -47,10 +47,10 @@ def read3dPoints(data):
     depthInpaint[depthInpaint > 8] = 8
 
     # Read 3D points and RGB image
-    rgb, points3d, _ = read_3d_pts_general(depthInpaint, data['K'], depthInpaint.shape, data['rgbpath'])
+    rgb, points3d, _ = read_3d_pts_general(depthInpaint, data.K, depthInpaint.shape, data.rgbpath)
 
     # Apply rotation
-    points3d = (data['Rtilt'] @ points3d.T).T
+    points3d = (data.Rtilt @ points3d.T).T
 
     return rgb, points3d, depthInpaint, imsize
 
